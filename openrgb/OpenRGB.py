@@ -43,8 +43,24 @@ class OpenRGB:
     # RGB controllers
 
     # not implemented
-    def resize_zone(self, device_id=0):
+    def resize_zone(self, zone_id, new_size, device_id=0):
+        # this is device specific, but does just require sending a zone_id
+        # and a new_size. Both are (signed) ints.
+        # None of my devices (@bahorn as of 2020-05-13) support resizing, so I
+        # can't really test this.
+
+        # however, this *should* work:
+        # msg = struct.pack('ii', zone_id, new_size)
+        # self._send_message(
+        #   ORGBPkt.RGBCONTROLLER_RESIZEZONE,
+        #   data=msg,
+        #   device_id=device_id,
+        # )
+
+        # if you have a device that supports it and are willing to test, PRs
+        # are accepted!
         pass
+
     def set_custom_mode(self, device_id=0):
         pass
     def set_update_mode(self, device_id=0):
