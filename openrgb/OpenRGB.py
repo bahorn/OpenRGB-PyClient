@@ -53,7 +53,7 @@ class OpenRGB:
     def update_leds(self, color_collection, device_id=0):
         c_buf = struct.pack('H', len(color_collection))
         for i in color_collection:
-            c_buf += struct.pack('I', i)
+            c_buf += struct.pack('BBBx', i[0], i[1], i[2])
         # Add an accurate 
         real = struct.pack('I', len(c_buf)) + c_buf
         self._send_message(
@@ -66,9 +66,11 @@ class OpenRGB:
             ORGBPkt.RGBCONTROLLER_UPDATEZONELEDS,
             device_id=device_id
         )
-    def update_single_led(self, device_id=0):
+    def update_single_led(self, led, color, device_id=0):
+        msg = struct.pack('iBBBx', led, color[0], color[1], color[2])
         self._send_message(
             ORGBPkt.RGBCONTROLLER_UPDATESINGLELED,
+            data=msg,
             device_id=device_id
         )
 
