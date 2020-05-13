@@ -15,7 +15,7 @@ devices = {}
 for i in range(count):
     devices[i] = client.controller_data(device_id=i)
     led_count = len(devices[i].leds)
-    client.update_leds([0x00]*led_count, device_id=i)
+    client.update_leds([(0, 0, 0)]*led_count, device_id=i)
 
 
 while True:
@@ -25,7 +25,7 @@ while True:
         leds_active = int((load/100)*led_count)
         print(leds_active)
         client.update_leds(
-            [0xff00ff]*leds_active + [0x00]*(led_count - leds_active),
+            [(255, 0, 255)]*leds_active + [(0, 0, 0)]*(led_count - leds_active),
             device_id=did
         )
     time.sleep(0.1)
