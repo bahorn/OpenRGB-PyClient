@@ -3,6 +3,7 @@ import struct
 
 from .ORGBDevice import ORGBDevice
 from .consts import ORGBPkt
+from .utils import pack_color
 
 class OpenRGB:
     # define these constants.
@@ -53,21 +54,30 @@ class OpenRGB:
     def update_leds(self, color_collection, device_id=0):
         c_buf = struct.pack('H', len(color_collection))
         for i in color_collection:
-            c_buf += struct.pack('BBBx', i[0], i[1], i[2])
-        # Add an accurate 
+            c_buf += pack_color(i)
+        # Add an accurate length.
         real = struct.pack('I', len(c_buf)) + c_buf
         self._send_message(
             ORGBPkt.RGBCONTROLLER_UPDATELEDS,
             data=real,
             device_id=device_id
         )
-    def update_zone_leds(self, device_id=0):
+
+    def update_zone_leds(self, zone_id, color_collection, device_id=0):
+        # Essentially the same as update_leds, but with a zone_id.
+        c_buf = struct.pack('IH', zone_id, len(color_collection))
+        for i in color_collection:
+            c_buf += pack_color(i)
+
+        real = struct.pack('I', len(c_buf)) + c_buf
         self._send_message(
             ORGBPkt.RGBCONTROLLER_UPDATEZONELEDS,
+            data=real,
             device_id=device_id
         )
+
     def update_single_led(self, led, color, device_id=0):
-        msg = struct.pack('iBBBx', led, color[0], color[1], color[2])
+        msg = struct.pack('i', led) + pack_color(color)
         self._send_message(
             ORGBPkt.RGBCONTROLLER_UPDATESINGLELED,
             data=msg,
