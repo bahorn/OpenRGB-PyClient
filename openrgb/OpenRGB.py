@@ -62,7 +62,12 @@ class OpenRGB:
         pass
 
     def set_custom_mode(self, device_id=0):
-        pass
+        # this just calls the function SetCustomMode() in the RGB controller,
+        # which in most cases just sets the active mode to 0.
+        self._send_message(
+            ORGBPkt.RGBCONTROLLER_SETCUSTOMMODE,
+            device_id=device_id
+        )
     def set_update_mode(self, device_id=0):
         pass
 
