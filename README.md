@@ -4,6 +4,42 @@
 dropped it's server protocol into master yesterday, so
 I wrote this hacky little client library to use it.
 
+## Usage
+
+**note** This is subject to change as the library is still early in development.
+I do intend do cleaner abstractions at some point, but for now it's fairly low
+level. The examples folder should contain enough code to get started, but you'll
+end up having to read the source if you want to do anything more complex.
+
+First, you need to import the library:
+
+```
+from openrgb import OpenRGB
+```
+
+Then you can connect to your SDK server instance by using instantiating the
+OpenRGB object with the details needed to connect to your SDK server instance.
+
+```
+client = OpenRGB('localhost', 1337)
+```
+
+Now we can start doing interesting things! Lets go through and read all the
+device details:
+
+```
+# Find out how many devices there are, and collect all their data.
+devices = {}
+for i in range(client.controller_count()):
+    devices[i] = client.controller_data(device_id=i)
+```
+
+And if we print devices, we get (subject to change due to your hardware):
+
+```
+{0: ASUS Aura Motherboard - ORGBDeviceType.MOTHERBOARD, 1: Corsair Vengeance Pro RGB - ORGBDeviceType.DRAM, 2: Corsair Vengeance Pro RGB - ORGBDeviceType.DRAM, 3: AMD Wraith Prism - ORGBDeviceType.COOLER, 4: SteelSeries Rival 110 - ORGBDeviceType.MOUSE}
+```
+
 ## Protocol
 
 ### Header
