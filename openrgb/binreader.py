@@ -19,7 +19,7 @@ class Blob:
     def int(self):
         return self._unpack('i')[0]
     def color(self):
-        return self._unpack('cccc')
+        return self._unpack('cccx')
     def string(self):
         total_len = self.ushort()
         return self._unpack(
