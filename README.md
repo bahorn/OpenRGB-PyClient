@@ -105,4 +105,4 @@ So, you need to set `device_id` to something in the range you got from the
 controller count.
 
 The response is a fairly large object that needs a bit of processing, so it's
-recommended you read my implementation in [openrgb/ORGBDevice.py](openrg/ORGBDevice.py).
+recommended you read my implementation in [openrgb/ORGBDevice.py](openrgb/ORGBDevice.py).
