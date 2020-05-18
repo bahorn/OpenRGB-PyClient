@@ -57,6 +57,8 @@ SteelSeries Rival 110 has 1 LEDs
 
 ## Protocol
 
+In case anyone else needs a reference:
+
 ### Header
 
 Each message (from either the client or the server) has a header of the format:
@@ -80,3 +82,27 @@ is set to 0.
 
 `packet_size` is the total amount of bytes of the binary payload. Some commands
 don't send anything, so this gets set to 0.
+
+
+### Packet Types
+
+#### REQUEST_CONTROLLER_COUNT
+
+You send this to the count of devices, which you can then enumerate with
+`REQUEST_CONTROLLER_DATA`.
+
+To use this, set `packet_size` and `device_id` to 0 as this has no request
+payload.
+
+You get a response back (with a header) containing an unsigned integer
+representing the total device count.
+
+#### REQUEST_CONTROLLER_DATA
+
+You use this to get a copy of the structure describing a device.
+
+So, you need to set `device_id` to something in the range you got from the
+controller count.
+
+The response is a fairly large object that needs a bit of processing, so it's
+recommended you read my implementation in [openrgb/ORGBDevice.py](openrg/ORGBDevice.py).
