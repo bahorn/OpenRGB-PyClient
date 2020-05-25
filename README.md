@@ -18,6 +18,21 @@ I do intend to make cleaner abstractions at some point, but for now it's fairly
 low level. The examples folder should contain enough code to get started, but
 you'll end up having to read the source if you want to do anything more complex.
 
+## Development
+
+If you would like to run this from git, you can do the following:
+
+```
+git clone https://github.com/bahorn/OpenRGB-PyClient.git
+cd OpenRGB-PyClient
+virtualenv -p python3 .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+And you can now start running scripts in `examples` like so:
+
+`python examples/color-change.py`
 
 ## Alternatives
 
