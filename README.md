@@ -17,3 +17,13 @@ pip install openrgb-pyclient
 I do intend to make cleaner abstractions at some point, but for now it's fairly
 low level. The examples folder should contain enough code to get started, but
 you'll end up having to read the source if you want to do anything more complex.
+
+
+## Alternatives
+
+This isn't the only library for OpenRGBs SDK manager! You might find one of these
+more suitable for your project!
+
+* [NetworkClient.{cpp,h}](https://gitlab.com/CalcProgrammer1/OpenRGB) The C++ client in the OpenRGB repo.
+* [vlakreeh's NodeJS client](https://github.com/vlakreeh/openrgb)
+* [jath03's Python client](https://github.com/jath03/openrgb-python) 
