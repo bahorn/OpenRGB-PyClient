@@ -10,5 +10,5 @@ for i in range(count):
     device = client.controller_data(device_id=i)
     print('{} - {}'.format(device.name, device.type))
     for mode in device.modes:
-        print('* {}'.format(mode['name']))
+        print('* {} -  {}'.format(mode['value'], mode['name']))
     print()
