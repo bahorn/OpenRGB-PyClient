@@ -1,8 +1,25 @@
 from .consts import ORGBDeviceType, ORGBZoneType
 from .binreader import Blob
 
-#container for devices
+
 class ORGBDevice:
+    """
+    ORGB is used to read device responses from the OpenRGB SDK server
+
+    :attribute type: Device Type. This 
+    :attribute name: Name of the device
+    :attribute desc: Description of the device
+    :attribute version: Device Version
+    :attribute serial: Device Serial
+    :attribute location: Device location
+    :attribute active_mode: Devices Active Mode
+    :attribute modes: List of modes
+    :attribute zones: List of zones
+    :attribute leds: List of LEDs
+    :attribute colors: List of colors
+
+    """
+
     def __init__(self, data):
         # hacky stupid way of doing this.
         blob = Blob(data)

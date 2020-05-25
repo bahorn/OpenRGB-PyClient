@@ -18,12 +18,11 @@ tools.
    
    gettingstarted
    protocol
+   classes
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
-
 

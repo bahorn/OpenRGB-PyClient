@@ -12,6 +12,10 @@ class OpenRGB:
     header_size = struct.calcsize(header_fmt)
 
     def __init__(self, host, port, client_string='python client'):
+        """
+        
+
+        """
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((host, port))
         self.client_name(client_string)
@@ -68,9 +72,16 @@ class OpenRGB:
             ORGBPkt.RGBCONTROLLER_SETCUSTOMMODE,
             device_id=device_id
         )
-    def set_update_mode(self, device_id=0):
-        pass
 
+    def set_update_mode(self, mode, device_id=0):
+        #c_buf = ''
+        #real = struct.pack('I', len(c_buf)) + c_buf
+        #self._send_message(
+        #    ORGBPkt.RGBCONTROLLER_UPDATE_MODE,
+        #    data=real,
+        #    device_id=device_id
+        #)
+        pass
     # LED Control
     def update_leds(self, color_collection, device_id=0):
         c_buf = struct.pack('H', len(color_collection))

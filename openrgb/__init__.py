@@ -1,1 +1,2 @@
-from .OpenRGB import OpenRGB
+from .OpenRGB import OpenRGB, ORGBDevice
+from .consts import ORGBDeviceType
