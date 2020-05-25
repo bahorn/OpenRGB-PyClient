@@ -4,3 +4,4 @@
 dist/
 build/
 OpenRGB_PyClient.egg-info/
+.doc_build/

@@ -6,11 +6,18 @@
 Welcome to OpenRGB-PyClient's documentation!
 ============================================
 
+This is the documentation for OpenRGB-PyClient, a Python library for interfacing
+with `OpenRGB's <https://gitlab.com/CalcProgrammer1/OpenRGB>`_ SDK Server.
+
+Also including some protocol documentation for those implementing libraries and
+tools.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-
+   
+   gettingstarted
+   protocol
 
 Indices and tables
 ==================
@@ -18,3 +25,5 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
