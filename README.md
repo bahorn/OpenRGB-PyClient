@@ -1,7 +1,7 @@
 # OpenRGB Python Client
 
-![PyPI](https://img.shields.io/pypi/v/OpenRGB-PyClient?style=flat-square)
-![Read the Docs](https://img.shields.io/readthedocs/openrgb-pyclient?style=flat-square)
+[![PyPI](https://img.shields.io/pypi/v/OpenRGB-PyClient?style=flat-square)](https://pypi.org/project/OpenRGB-PyClient/)
+[![Read the Docs](https://img.shields.io/readthedocs/openrgb-pyclient?style=flat-square)](https://openrgb-pyclient.readthedocs.io/en/latest/)
 
 [OpenRGB](https://gitlab.com/CalcProgrammer1/OpenRGB) 
 dropped it's server protocol into master yesterday, so
