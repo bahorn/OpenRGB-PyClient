@@ -1,3 +1,6 @@
 .venv/
 **/__pycache__/**
 *.pyc
+dist/
+build/
+OpenRGB_PyClient.egg-info/

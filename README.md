@@ -1,5 +1,7 @@
 # OpenRGB Python Client
 
+![PyPI](https://img.shields.io/pypi/v/OpenRGB-PyClient?style=flat-square)
+
 [OpenRGB](https://gitlab.com/CalcProgrammer1/OpenRGB) 
 dropped it's server protocol into master yesterday, so
 I wrote this hacky little client library to use it.
