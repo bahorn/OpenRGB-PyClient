@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.1",
     author="B Horn",
     author_email="b@horn.uk",
-    description="A small example package",
+    description="Python Client for the OpenRGB SDK Server",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/bahorn/OpenRGB-PyClient",
