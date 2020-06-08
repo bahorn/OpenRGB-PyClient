@@ -10,7 +10,9 @@ for device in client.devices():
     print('{} - {}'.format(device.name, device.type))
     for mode in device.modes:
         print('* {} -  {}'.format(mode['value'], mode['name']))
+        if mode['name'] == 'Rainbow':
+            # happy pride :)
+            client.set_update_mode(mode['id'], device.id)
     print()
 
-print(client.controller_data(4).modes)
-client.set_update_mode(1, 4, speed=4)
+

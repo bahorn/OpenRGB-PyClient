@@ -41,7 +41,6 @@ class ORGBDevice:
 
         self.modes = []
         for mode_idx in range(n_modes):
-
             modename = blob.string()
             value = blob.int()
             flags = blob.uint()
@@ -59,6 +58,7 @@ class ORGBDevice:
                 colors.append(blob.color())
 
             new_mode = {
+                'id': mode_idx,
                 'name': modename,
                 'value': value,
                 'flags': flags,

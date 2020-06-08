@@ -103,7 +103,7 @@ class OpenRGB:
 
         c_buf = struct.pack('I', len(msg.data))
         c_buf += msg.data
-        print(c_buf)
+
         self._send_message(
             ORGBPkt.RGBCONTROLLER_UPDATEMODE,
             data=c_buf,
