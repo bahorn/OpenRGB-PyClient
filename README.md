@@ -34,6 +34,10 @@ And you can now start running scripts in `examples` like so:
 
 `python examples/color-change.py`
 
+## Projects Using This!
+
+* [OpenRGB-DBus-Connector by @vinno97](https://github.com/Vinno97/OpenRGB-DBus-Connector)
+
 ## Alternatives
 
 This isn't the only library for OpenRGBs SDK manager! You might find one of these
@@ -41,4 +45,4 @@ more suitable for your project!
 
 * [NetworkClient.{cpp,h}](https://gitlab.com/CalcProgrammer1/OpenRGB) The C++ client in the OpenRGB repo.
 * [vlakreeh's NodeJS client](https://github.com/vlakreeh/openrgb)
-* [jath03's Python client](https://github.com/jath03/openrgb-python) *Currently seems be better maintained than this library*
+* [jath03's Python client](https://github.com/jath03/openrgb-python) **Currently better maintained / easier to use of the two Python libraries.**
