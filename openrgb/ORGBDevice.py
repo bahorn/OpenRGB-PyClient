@@ -5,6 +5,21 @@ from .binreader import Blob
 # these.
 
 
+def _set_batch(function, device, n_leds, colors, interpolate):
+    if type(colors) is list:
+        if interpolate is True:
+            buf = []
+            for led in range(n_leds):
+                buf.append(
+                    colors[int(len(colors) * led/n_leds)]
+                )
+            function(buf, device.id)
+        else:
+            function(colors, device.id)
+    else:
+        function([colors]*n_leds, device.id)
+
+
 class ORGBMode(object):
     def __init__(self,
                  idx,
@@ -88,22 +103,17 @@ class ORGBZone(object):
         self.leds_count = leds_count
         self.owner = owner
 
-    def set(self, colors):
+    def set(self, colors, interpolate=False):
         device = self.owner
         con = device.owner
-        if type(colors) is list:
-            con.update_zone_leds(
-                self.id,
-                colors,
-                device_id=device.id
-            )
-        else:
-            # set them all to the same color.
-            con.update_zone_leds(
-                self.id,
-                [colors]*self.leds_count,
-                device_id=device.id
-            )
+        n_leds = self.leds_count
+        _set_batch(
+            lambda c, did: con.update_zone_leds(self.id, c, did),
+            device,
+            n_leds,
+            colors,
+            interpolate
+        )
 
     def __getitem__(self, item):
         return self.__dict__[item]
@@ -245,18 +255,7 @@ class ORGBDevice:
     def set(self, colors, interpolate=False):
         con = self.owner
         n_leds = len(self.leds)
-        if type(colors) is list:
-            if interpolate is True:
-                buf = []
-                for led in range(n_leds):
-                    buf.append(
-                        colors[int(len(colors) * led/n_leds)]
-                    )
-                con.update_leds(buf, self.id)
-            else:
-                con.update_leds(colors, self.id)
-        else:
-            con.update_led([colors]*n_leds, self.id)
+        _set_batch(con.update_led, self, n_leds, colors, interpolate)
 
     def __repr__(self):
         return '{} - {}'.format(self.name, self.type)
