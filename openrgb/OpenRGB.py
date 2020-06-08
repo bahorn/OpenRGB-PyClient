@@ -5,6 +5,7 @@ from .ORGBDevice import ORGBDevice
 from .consts import ORGBPkt
 from .utils import pack_color
 
+
 class OpenRGB:
     # define these constants.
     magic = bytes('ORGB', 'ascii')
@@ -12,10 +13,6 @@ class OpenRGB:
     header_size = struct.calcsize(header_fmt)
 
     def __init__(self, host, port, client_string='python client'):
-        """
-        
-
-        """
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((host, port))
         self.client_name(client_string)
@@ -42,7 +39,13 @@ class OpenRGB:
             device_id=device_id
         )
         msg = self._recv_message()
-        return ORGBDevice(msg[1])
+        return ORGBDevice(msg[1], device_id)
+
+    # Generator for getting devices
+    def devices(self):
+        device_count = self.controller_count()
+        for device_id in range(device_count):
+            yield self.controller_data(device_id)
 
     # RGB controllers
 
@@ -82,6 +85,8 @@ class OpenRGB:
         #    device_id=device_id
         #)
         pass
+
+
     # LED Control
     def update_leds(self, color_collection, device_id=0):
         c_buf = struct.pack('H', len(color_collection))

@@ -20,8 +20,9 @@ class ORGBDevice:
 
     """
 
-    def __init__(self, data):
+    def __init__(self, data, device_id=0):
         # hacky stupid way of doing this.
+        self.id = device_id
         blob = Blob(data)
         length = blob.uint()
         if length != len(data):

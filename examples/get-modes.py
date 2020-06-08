@@ -5,10 +5,9 @@ sys.path.append(os.path.realpath('.'))
 from openrgb import OpenRGB
 
 client = OpenRGB('localhost', 1337)
-count = client.controller_count()
-for i in range(count):
-    device = client.controller_data(device_id=i)
+
+for device in client.devices():
     print('{} - {}'.format(device.name, device.type))
     for mode in device.modes:
-        print('* {}'.format(mode['name']))
+        print('* {} -  {}'.format(mode['value'], mode['name']))
     print()

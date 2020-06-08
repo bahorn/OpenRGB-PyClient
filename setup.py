@@ -1,11 +1,18 @@
 import setuptools
+import os
+
+# bump this regularly.
+default_version = "0.0.1"
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+# Either extract it from the release trigger, or use the default version.
+version = os.environ['GITHUB_REF'][1:] or default_version
+
 setuptools.setup(
     name="OpenRGB-PyClient",
-    version="0.0.1",
+    version=version,
     author="B Horn",
     author_email="b@horn.uk",
     description="Python Client for the OpenRGB SDK Server",
