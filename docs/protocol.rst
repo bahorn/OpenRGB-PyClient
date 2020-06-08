@@ -51,6 +51,57 @@ controller count.
 The response is a fairly large object that needs a bit of processing, so it's
 recommended you read my implementation [#ORGBDevice]_
 
+SET_CLIENT_NAME
+===============
+
+This is how you set the name that appears in the SDK server pane of the GUI.
+
+It takes a string which is your name, with the names length set in the packet
+header. (`packet_size`)
+
+RGBCONTROLLER_RESIZEZONE
+========================
+
+Very few devices support this.
+
+RGBCONTROLLER_UPDATELEDS
+========================
+
+You provide a list of 32 bit colors, starting with the total count and it will
+change the leds starting from led 0, all the way to led n.
+
+You need to send one color for every LED.
+
+RGBCONTROLLER_UPDATEZONELEDS
+============================
+
+This works in a similar way to UPDATELEDS, but includes an extra zoneid at the
+start of the packet.
+
+This is so you can say, apply it only to one collection of LEDS in a device.
+
+RGBCONTROLLER_UPDATESINGLELED
+=============================
+
+This takes an signed integer representing the LED id, along with the color
+represented as a 32 bit int (RGBx).
+
+RGBCONTROLLER_SETCUSTOMMODE
+===========================
+
+This just sets the active mode to 0 for most devices, which is generally the
+static color mode.
+
+Takes no option, just needs a device as defined in the packet header.
+
+RGBCONTROLLER_UPDATEMODE
+========================
+
+This lets you send over an entirely new mode object.
+
+The main way to use this is to take an existing one, and send that, with just
+things like speed, direction or color mode changed. Can do some hacky things
+with this.
 
 .. [#NetworkProtocol] https://gitlab.com/CalcProgrammer1/OpenRGB/-/blob/master/NetworkProtocol.h
 .. [#ORGBDevice] https://github.com/bahorn/openrgb/ORGBDevice.py
