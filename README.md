@@ -41,4 +41,4 @@ more suitable for your project!
 
 * [NetworkClient.{cpp,h}](https://gitlab.com/CalcProgrammer1/OpenRGB) The C++ client in the OpenRGB repo.
 * [vlakreeh's NodeJS client](https://github.com/vlakreeh/openrgb)
-* [jath03's Python client](https://github.com/jath03/openrgb-python) 
+* [jath03's Python client](https://github.com/jath03/openrgb-python) *Currently seems be better maintained than this library*
