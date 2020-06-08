@@ -88,6 +88,23 @@ class ORGBZone(object):
         self.leds_count = leds_count
         self.owner = owner
 
+    def set(self, colors):
+        device = self.owner
+        con = device.owner
+        if type(colors) is list:
+            con.update_zone_leds(
+                self.id,
+                colors,
+                device_id=device.id
+            )
+        else:
+            # set them all to the same color.
+            con.update_zone_leds(
+                self.id,
+                [colors]*self.leds_count,
+                device_id=device.id
+            )
+
     def __getitem__(self, item):
         return self.__dict__[item]
 
@@ -98,6 +115,11 @@ class ORGBLED(object):
         self.name = name
         self.value = value
         self.owner = owner
+
+    def set(self, color):
+        device = self.owner
+        con = device.owner
+        con.update_single_led(self.id, color, device_id=device.id)
 
     def __getitem__(self, item):
         return self.__dict__[item]
@@ -219,6 +241,22 @@ class ORGBDevice:
         self.colors = []
         for color_idx in range(n_colors):
             self.colors.append(blob.color())
+
+    def set(self, colors, interpolate=False):
+        con = self.owner
+        n_leds = len(self.leds)
+        if type(colors) is list:
+            if interpolate is True:
+                buf = []
+                for led in range(n_leds):
+                    buf.append(
+                        colors[int(len(colors) * led/n_leds)]
+                    )
+                con.update_leds(buf, self.id)
+            else:
+                con.update_leds(colors, self.id)
+        else:
+            con.update_led([colors]*n_leds, self.id)
 
     def __repr__(self):
         return '{} - {}'.format(self.name, self.type)

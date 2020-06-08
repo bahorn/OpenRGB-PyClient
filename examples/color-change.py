@@ -15,9 +15,8 @@ seq = [
 client = OpenRGB('localhost', 1337)
 
 for device in client.devices():
-    led_count = len(device.leds)
-    cmap = []
-    for j in range(led_count):
-        idx = int(len(seq)*(j/led_count))
-        cmap.append(seq[idx])
-    client.update_leds(cmap, device_id=device.id)
+    for mode in device.modes:
+        if mode.name == 'Static':
+            mode.active()
+            break
+    device.set(seq, interpolate=True)
