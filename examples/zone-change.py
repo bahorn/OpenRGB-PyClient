@@ -22,4 +22,3 @@ for device in client.devices():
             break
     for zone in device.zones:
         zone.set(seq, interpolate=True)
-

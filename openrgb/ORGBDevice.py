@@ -255,7 +255,7 @@ class ORGBDevice:
     def set(self, colors, interpolate=False):
         con = self.owner
         n_leds = len(self.leds)
-        _set_batch(con.update_led, self, n_leds, colors, interpolate)
+        _set_batch(con.update_leds, self, n_leds, colors, interpolate)
 
     def __repr__(self):
         return '{} - {}'.format(self.name, self.type)
