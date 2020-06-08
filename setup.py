@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 # Either extract it from the release trigger, or use the default version.
-version = os.environ['GITHUB_REF'][1:] or default_version
+version = os.environ['GITHUB_REF'].split('/')[-1][1:] or default_version
 
 setuptools.setup(
     name="OpenRGB-PyClient",
@@ -26,4 +26,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    setup_requires=['wheel']
 )
