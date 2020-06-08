@@ -4,8 +4,12 @@ Getting Started
 You can find examples on how to use the library in the `examples/ <https://github.com/bahorn/OpenRGB-PyClient/tree/master/examples>`_
 directory in the projects repository
 
-Walk Through 
+Walkthrough 
 ************
+
+If you haven't already, install the library by `pip`::
+    
+    pip install OpenRGB-PyClient
 
 First, you need to import the library::
 
