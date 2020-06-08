@@ -2,7 +2,7 @@ import struct
 
 from .ORGBDevice import ORGBDevice, ORGBMode
 from .consts import ORGBPkt
-from .utils import pack_color
+from .utils import pack_color, prepend_length
 from .Network import Network
 
 
@@ -84,7 +84,7 @@ class OpenRGB:
 
         self.con.send_message(
             ORGBPkt.RGBCONTROLLER_UPDATEMODE,
-            data=OpenRGB._add_length(bytes(data)),
+            data=prepend_length(bytes(data)),
             device_id=device_id
         )
 
@@ -96,7 +96,7 @@ class OpenRGB:
         # Add an accurate length.
         self.con.send_message(
             ORGBPkt.RGBCONTROLLER_UPDATELEDS,
-            data=OpenRGB._add_length(c_buf),
+            data=prepend_length(c_buf),
             device_id=device_id
         )
 
@@ -108,7 +108,7 @@ class OpenRGB:
 
         self.con.send_message(
             ORGBPkt.RGBCONTROLLER_UPDATEZONELEDS,
-            data=OpenRGB._add_length(c_buf),
+            data=prepend_length(c_buf),
             device_id=device_id
         )
 
@@ -119,7 +119,3 @@ class OpenRGB:
             data=msg,
             device_id=device_id
         )
-
-    @staticmethod
-    def _add_length(data):
-        return struct.pack('I', len(data)) + data
