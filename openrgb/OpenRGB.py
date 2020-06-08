@@ -1,45 +1,39 @@
-import socket
 import struct
 
 from .ORGBDevice import ORGBDevice
 from .consts import ORGBPkt
 from .utils import pack_color
 from .binreader import Blob
+from .Network import Network
 
 
 class OpenRGB:
-    # define these constants.
-    magic = bytes('ORGB', 'ascii')
-    header_fmt = '4sIII'
-    header_size = struct.calcsize(header_fmt)
-
     def __init__(self, host, port, client_string='python client'):
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.connect((host, port))
+        self.con = Network(host, port)
         self.client_name(client_string)
 
     # Network stuff
     def client_name(self, name=None):
         if name is not None:
             self.client_string = name
-        self._send_message(
+        self.con.send_message(
             ORGBPkt.SET_CLIENT_NAME,
             bytes(self.client_string, 'ascii')
         )
 
     def controller_count(self):
-        self._send_message(ORGBPkt.REQUEST_CONTROLLER_COUNT)
-        msg = self._recv_message()
+        self.con.send_message(ORGBPkt.REQUEST_CONTROLLER_COUNT)
+        msg = self.con.recv_message()
         _, count = msg
         count = struct.unpack('I', count)[0]
         return count
 
     def controller_data(self, device_id=0):
-        self._send_message(
+        self.con.send_message(
             ORGBPkt.REQUEST_CONTROLLER_DATA,
             device_id=device_id
         )
-        msg = self._recv_message()
+        msg = self.con.recv_message()
         return ORGBDevice(msg[1], device_id)
 
     # Generator for getting devices
@@ -58,7 +52,7 @@ class OpenRGB:
 
         # however, this *should* work:
         msg = struct.pack('ii', zone_id, new_size)
-        self._send_message(
+        self.con.send_message(
            ORGBPkt.RGBCONTROLLER_RESIZEZONE,
            data=msg,
            device_id=device_id,
@@ -71,7 +65,7 @@ class OpenRGB:
     def set_custom_mode(self, device_id=0):
         # this just calls the function SetCustomMode() in the RGB controller,
         # which in most cases just sets the active mode to 0.
-        self._send_message(
+        self.con.send_message(
             ORGBPkt.RGBCONTROLLER_SETCUSTOMMODE,
             device_id=device_id
         )
@@ -100,7 +94,7 @@ class OpenRGB:
         for color in cur_mode['colors']:
             msg.color(color)
 
-        self._send_message(
+        self.con.send_message(
             ORGBPkt.RGBCONTROLLER_UPDATEMODE,
             data=OpenRGB._add_length(msg.data),
             device_id=device_id
@@ -113,7 +107,7 @@ class OpenRGB:
         for i in color_collection:
             c_buf += pack_color(i)
         # Add an accurate length.
-        self._send_message(
+        self.con.send_message(
             ORGBPkt.RGBCONTROLLER_UPDATELEDS,
             data=OpenRGB._add_length(c_buf),
             device_id=device_id
@@ -125,7 +119,7 @@ class OpenRGB:
         for i in color_collection:
             c_buf += pack_color(i)
 
-        self._send_message(
+        self.con.send_message(
             ORGBPkt.RGBCONTROLLER_UPDATEZONELEDS,
             data=OpenRGB._add_length(c_buf),
             device_id=device_id
@@ -133,50 +127,10 @@ class OpenRGB:
 
     def update_single_led(self, led, color, device_id=0):
         msg = struct.pack('i', led) + pack_color(color)
-        self._send_message(
+        self.con.send_message(
             ORGBPkt.RGBCONTROLLER_UPDATESINGLELED,
             data=msg,
             device_id=device_id
-        )
-
-    # protocol helpers
-    def _make_header(self, dev_idx, pkt_type, pkt_size):
-        return struct.pack(
-            self.header_fmt,
-            self.magic,
-            dev_idx,
-            pkt_type,
-            pkt_size
-        )
-
-    def _send_message(self, cmd, data=b'', device_id=0):
-        header = self._make_header(
-            device_id,
-            cmd.value,
-            len(data)
-        )
-        packet = header + data
-        self.s.send(packet)
-
-    def _recv_message(self):
-        # validate the header:
-        magic, dev_idx, pkt_type, pkt_size = struct.unpack(
-            self.header_fmt, self.s.recv(self.header_size)
-        )
-        if magic != self.magic:
-            raise Exception('Invalid packet received')
-
-        # try to read it all in.
-        buf = b''
-        if pkt_size > 0:
-            left = pkt_size
-            while left > 0:
-                buf += self.s.recv(left)
-                left = pkt_size - len(buf)
-
-        return (
-            (dev_idx, pkt_type),
-            buf
         )
 
     @staticmethod

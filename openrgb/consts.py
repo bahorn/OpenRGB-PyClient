@@ -1,4 +1,5 @@
 from enum import Enum
+import struct
 
 class ORGBPkt(Enum):
     REQUEST_CONTROLLER_COUNT      = 0
@@ -27,3 +28,7 @@ class ORGBZoneType(Enum):
     SINGLE = 0
     LINEAR = 1
     MATRIX = 2
+
+MagicBytes = bytes('ORGB', 'ascii')
+HeaderFmt = '4sIII'
+HeaderSize = struct.calcsize(HeaderFmt)
