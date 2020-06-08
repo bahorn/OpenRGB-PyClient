@@ -50,7 +50,6 @@ class OpenRGB:
 
     # RGB controllers
 
-    # not implemented
     def resize_zone(self, zone_id, new_size, device_id=0):
         # this is device specific, but does just require sending a zone_id
         # and a new_size. Both are (signed) ints.
@@ -58,12 +57,12 @@ class OpenRGB:
         # can't really test this.
 
         # however, this *should* work:
-        # msg = struct.pack('ii', zone_id, new_size)
-        # self._send_message(
-        #   ORGBPkt.RGBCONTROLLER_RESIZEZONE,
-        #   data=msg,
-        #   device_id=device_id,
-        # )
+        msg = struct.pack('ii', zone_id, new_size)
+        self._send_message(
+           ORGBPkt.RGBCONTROLLER_RESIZEZONE,
+           data=msg,
+           device_id=device_id,
+        )
 
         # if you have a device that supports it and are willing to test, PRs
         # are accepted!
@@ -101,12 +100,9 @@ class OpenRGB:
         for color in cur_mode['colors']:
             msg.color(color)
 
-        c_buf = struct.pack('I', len(msg.data))
-        c_buf += msg.data
-
         self._send_message(
             ORGBPkt.RGBCONTROLLER_UPDATEMODE,
-            data=c_buf,
+            data=OpenRGB._add_length(msg.data),
             device_id=device_id
         )
         pass
@@ -117,10 +113,9 @@ class OpenRGB:
         for i in color_collection:
             c_buf += pack_color(i)
         # Add an accurate length.
-        real = struct.pack('I', len(c_buf)) + c_buf
         self._send_message(
             ORGBPkt.RGBCONTROLLER_UPDATELEDS,
-            data=real,
+            data=OpenRGB._add_length(c_buf),
             device_id=device_id
         )
 
@@ -130,10 +125,9 @@ class OpenRGB:
         for i in color_collection:
             c_buf += pack_color(i)
 
-        real = struct.pack('I', len(c_buf)) + c_buf
         self._send_message(
             ORGBPkt.RGBCONTROLLER_UPDATEZONELEDS,
-            data=real,
+            data=OpenRGB._add_length(c_buf),
             device_id=device_id
         )
 
@@ -184,3 +178,7 @@ class OpenRGB:
             (dev_idx, pkt_type),
             buf
         )
+
+    @staticmethod
+    def _add_length(data):
+        return struct.pack('I', len(data)) + data
