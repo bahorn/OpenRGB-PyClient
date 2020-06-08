@@ -1,12 +1,113 @@
 from .consts import ORGBDeviceType, ORGBZoneType
 from .binreader import Blob
 
+# This are internal. As a library user you shouldn't ever have to construct
+# these.
+
+
+class ORGBMode(object):
+    def __init__(self,
+                 idx,
+                 name,
+                 value,
+                 flags,
+                 speed_min,
+                 speed_max,
+                 colors_min,
+                 colors_max,
+                 speed,
+                 direction,
+                 color_mode,
+                 colors,
+                 owner=None
+                 ):
+        self.id = idx
+        self.name = name
+        self.value = value
+        self.flags = flags
+        self.speed_min = speed_min
+        self.speed_max = speed_max
+        self.colors_min = colors_min
+        self.colors_max = colors_max
+        self.speed = speed
+        self.direction = direction
+        self.color_mode = color_mode
+        self.colors = colors
+        self.owner = owner
+
+    def active(self):
+        if self.owner is None:
+            return
+        # We belong to an ORGBDevice, which belongs to the main OpenRGB class.
+        device = self.owner
+        con = device.owner
+        con.set_update_mode(self, device_id=device.id)
+
+    # serialize this for the wire.
+    def __bytes__(self):
+        blob = Blob()
+        blob.int(self.id)
+        blob.string(self.name)
+        blob.int(self.value)
+        blob.uint(self.flags)
+        blob.uint(self.speed_min)
+        blob.uint(self.speed_max)
+        blob.uint(self.colors_min)
+        blob.uint(self.colors_max)
+
+        # settings
+        blob.uint(self.speed)
+        blob.uint(self.direction)
+        blob.uint(self.color_mode)
+
+        blob.ushort(len(self.colors))
+        for color in self.colors:
+            blob.color(color)
+
+        return blob.data
+
+    def __getitem__(self, item):
+        return self.__dict__[item]
+
+
+class ORGBZone(object):
+    def __init__(self,
+                 idx,
+                 name,
+                 zonetype,
+                 leds_min,
+                 leds_max,
+                 leds_count,
+                 owner=None
+                 ):
+        self.id = idx
+        self.name = name
+        self.type = zonetype
+        self.leds_min = leds_min
+        self.leds_max = leds_max
+        self.leds_count = leds_count
+        self.owner = owner
+
+    def __getitem__(self, item):
+        return self.__dict__[item]
+
+
+class ORGBLED(object):
+    def __init__(self, idx, name, value, owner=None):
+        self.id = idx
+        self.name = name
+        self.value = value
+        self.owner = owner
+
+    def __getitem__(self, item):
+        return self.__dict__[item]
+
 
 class ORGBDevice:
     """
     ORGB is used to read device responses from the OpenRGB SDK server
 
-    :attribute type: Device Type. This 
+    :attribute type: Device Type.
     :attribute name: Name of the device
     :attribute desc: Description of the device
     :attribute version: Device Version
@@ -20,7 +121,8 @@ class ORGBDevice:
 
     """
 
-    def __init__(self, data, device_id=0):
+    def __init__(self, data, device_id=0, owner=None):
+        self.owner = owner
         # hacky stupid way of doing this.
         self.id = device_id
         blob = Blob(data)
@@ -57,22 +159,22 @@ class ORGBDevice:
             for color_index in range(color_len):
                 colors.append(blob.color())
 
-            new_mode = {
-                'id': mode_idx,
-                'name': modename,
-                'value': value,
-                'flags': flags,
-                'speed_min': speed_min,
-                'speed_max': speed_max,
-                'colors_min':colors_min,
-                'colors_max': colors_max,
-                'speed': speed,
-                'direction': direction,
-                'color_mode': color_mode,
-                'colors': colors
-            }
+            new_mode = ORGBMode(
+                mode_idx,
+                modename,
+                value,
+                flags,
+                speed_min,
+                speed_max,
+                colors_min,
+                colors_max,
+                speed,
+                direction,
+                color_mode,
+                colors,
+                owner=self
+            )
             self.modes.append(new_mode)
-
 
         n_zones = blob.ushort()
         self.zones = []
@@ -86,14 +188,16 @@ class ORGBDevice:
             matrix_size = blob.ushort()
             blob.skip(matrix_size)
 
-            new_zone = {
-                'name': zonename,
-                'type': zonetype,
-                'leds_min': leds_min,
-                'leds_max': leds_max,
-                'leds_count': leds_count,
+            new_zone = ORGBZone(
+                zone_idx,
+                zonename,
+                zonetype,
+                leds_min,
+                leds_max,
+                leds_count,
+                owner=self
+            )
 
-            }
             self.zones.append(new_zone)
 
         n_leds = blob.ushort()
@@ -102,10 +206,13 @@ class ORGBDevice:
             led_name = blob.string()
             led_value = blob.color()
 
-            new_led = {
-                'name': led_name,
-                'value': led_value
-            }
+            new_led = ORGBLED(
+                led_idx,
+                led_name,
+                led_value,
+                owner=self
+            )
+
             self.leds.append(new_led)
 
         n_colors = blob.ushort()
@@ -115,4 +222,3 @@ class ORGBDevice:
 
     def __repr__(self):
         return '{} - {}'.format(self.name, self.type)
-

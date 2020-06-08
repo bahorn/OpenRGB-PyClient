@@ -47,7 +47,6 @@ class Blob:
             packed = self._pack(
                 '{}s'.format(total_len), bytes(value, 'ascii')+b'\x00'
             )
-            print(packed)
             return packed
         else:
             total_len = self.ushort()

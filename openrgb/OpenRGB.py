@@ -1,9 +1,8 @@
 import struct
 
-from .ORGBDevice import ORGBDevice
+from .ORGBDevice import ORGBDevice, ORGBMode
 from .consts import ORGBPkt
 from .utils import pack_color
-from .binreader import Blob
 from .Network import Network
 
 
@@ -34,7 +33,7 @@ class OpenRGB:
             device_id=device_id
         )
         msg = self.con.recv_message()
-        return ORGBDevice(msg[1], device_id)
+        return ORGBDevice(msg[1], device_id, owner=self)
 
     # Generator for getting devices
     def devices(self):
@@ -72,34 +71,22 @@ class OpenRGB:
 
     def set_update_mode(self, mode, device_id=0, speed=None, direction=None,
                         color_mode=None):
+        data = None
         # this requires getting the device info
-        data = self.controller_data(device_id)
-        cur_mode = data.modes[mode]
-        msg = Blob()
-        msg.int(mode)
-        msg.string(cur_mode['name'])
-        msg.int(cur_mode['value'])
-        msg.uint(cur_mode['flags'])
-        msg.uint(cur_mode['speed_min'])
-        msg.uint(cur_mode['speed_max'])
-        msg.uint(cur_mode['colors_min'])
-        msg.uint(cur_mode['colors_max'])
+        if type(mode) is ORGBMode:
+            data = mode
+        else:
+            data = self.controller_data(device_id).modes[mode]
 
-        # settings
-        msg.uint(speed or cur_mode['speed'])
-        msg.uint(direction or cur_mode['direction'])
-        msg.uint(color_mode or cur_mode['color_mode'])
-
-        msg.ushort(len(cur_mode['colors']))
-        for color in cur_mode['colors']:
-            msg.color(color)
+        data.speed = speed or data.speed
+        data.direction = direction or data.direction
+        data.color_mode = color_mode or data.color_mode
 
         self.con.send_message(
             ORGBPkt.RGBCONTROLLER_UPDATEMODE,
-            data=OpenRGB._add_length(msg.data),
+            data=OpenRGB._add_length(bytes(data)),
             device_id=device_id
         )
-        pass
 
     # LED Control
     def update_leds(self, color_collection, device_id=0):
