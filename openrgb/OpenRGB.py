@@ -4,6 +4,7 @@ import struct
 from .ORGBDevice import ORGBDevice
 from .consts import ORGBPkt
 from .utils import pack_color
+from .binreader import Blob
 
 
 class OpenRGB:
@@ -76,16 +77,39 @@ class OpenRGB:
             device_id=device_id
         )
 
-    def set_update_mode(self, mode, device_id=0):
-        #c_buf = ''
-        #real = struct.pack('I', len(c_buf)) + c_buf
-        #self._send_message(
-        #    ORGBPkt.RGBCONTROLLER_UPDATE_MODE,
-        #    data=real,
-        #    device_id=device_id
-        #)
-        pass
+    def set_update_mode(self, mode, device_id=0, speed=None, direction=None,
+                        color_mode=None):
+        # this requires getting the device info
+        data = self.controller_data(device_id)
+        cur_mode = data.modes[mode]
+        msg = Blob()
+        msg.int(mode)
+        msg.string(cur_mode['name'])
+        msg.int(cur_mode['value'])
+        msg.uint(cur_mode['flags'])
+        msg.uint(cur_mode['speed_min'])
+        msg.uint(cur_mode['speed_max'])
+        msg.uint(cur_mode['colors_min'])
+        msg.uint(cur_mode['colors_max'])
 
+        # settings
+        msg.uint(speed or cur_mode['speed'])
+        msg.uint(direction or cur_mode['direction'])
+        msg.uint(color_mode or cur_mode['color_mode'])
+
+        msg.ushort(len(cur_mode['colors']))
+        for color in cur_mode['colors']:
+            msg.color(color)
+
+        c_buf = struct.pack('I', len(msg.data))
+        c_buf += msg.data
+
+        self._send_message(
+            ORGBPkt.RGBCONTROLLER_UPDATEMODE,
+            data=c_buf,
+            device_id=device_id
+        )
+        pass
 
     # LED Control
     def update_leds(self, color_collection, device_id=0):
