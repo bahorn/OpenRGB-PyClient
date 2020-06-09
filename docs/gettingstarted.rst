@@ -23,10 +23,7 @@ OpenRGB object with the details needed to connect to your SDK server instance.::
 Now we can start doing interesting things! Lets go through and read all the
 device details::
 
-    # Find out how many devices there are, and collect all their data.
-    devices = {}
-    for i in range(client.controller_count()):
-        devices[i] = client.controller_data(device_id=i)
+    devices = client.devices()
 
 And if we print devices, we get (subject to change due to your hardware)::
     
@@ -35,8 +32,8 @@ And if we print devices, we get (subject to change due to your hardware)::
 
 Now, we can then start to get data like how many LEDs each device has::
 
-    for _, device in devices.items():
-        print('{} has {} LED(s)'.format(device.name, len(device.leds)))
+    for device in devices:
+        print('{} has {} LEDs'.format(device.name, len(device.leds)))
 
 Giving us something like::
 
@@ -45,3 +42,21 @@ Giving us something like::
     Corsair Vengeance Pro RGB has 10 LEDs
     AMD Wraith Prism has 3 LEDs
     SteelSeries Rival 110 has 1 LEDs
+
+
+Now, if we wanted to make all devices red, we can do something like this::
+    
+    for device in devices:
+        device.set((255, 0, 0))
+
+
+If we wanted to make the first led on each device blue::
+
+    for device in devices:
+        device.leds[0].set((0, 0, 255))
+
+And if we wanted to make everything that supports a rainbow mode, rainbow::
+
+    for device in devices:
+        for mode in device.modes:
+            if mode.name == 'Rainbow': mode.active()
