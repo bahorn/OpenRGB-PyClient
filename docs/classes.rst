@@ -25,6 +25,7 @@ from the SDK Server. You shouldn't need to every directly instantiate this class
 but reading it's attributes is needed to get information on a device.
 
 .. autoclass:: openrgb.ORGBDevice
+    :members:
     :undoc-members:
 
 ORGBMode
