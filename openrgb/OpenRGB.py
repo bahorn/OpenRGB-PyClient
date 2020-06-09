@@ -13,6 +13,11 @@ class OpenRGB:
 
     # Network stuff
     def client_name(self, name=None):
+        """
+        This sets the client name in the ORGB SDK server to the name provided.
+
+        This lets you identify which programs are currently connected.
+        """
         if name is not None:
             self.client_string = name
         self.con.send_message(
@@ -21,6 +26,9 @@ class OpenRGB:
         )
 
     def controller_count(self):
+        """
+        This returns the count of active controllers in OpenRGB.
+        """
         self.con.send_message(ORGBPkt.REQUEST_CONTROLLER_COUNT)
         msg = self.con.recv_message()
         _, count = msg
@@ -28,6 +36,10 @@ class OpenRGB:
         return count
 
     def controller_data(self, device_id=0):
+        """
+        This returns an `ORGBDevice` constructed from the response given by
+        the SDK Server, with device_id being the identifier for each device.
+        """
         self.con.send_message(
             ORGBPkt.REQUEST_CONTROLLER_DATA,
             device_id=device_id
@@ -37,6 +49,12 @@ class OpenRGB:
 
     # Generator for getting devices
     def devices(self):
+        """
+        This provides a generator for iterating though all the devices OpenRGB
+        can find.
+
+        This is the recommended interface for finding devices.
+        """
         device_count = self.controller_count()
         for device_id in range(device_count):
             yield self.controller_data(device_id)
@@ -62,6 +80,10 @@ class OpenRGB:
         pass
 
     def set_custom_mode(self, device_id=0):
+        """
+        This calls set_custom_mode in the RGBController, which in most cases
+        sets the active mode to 0.
+        """
         # this just calls the function SetCustomMode() in the RGB controller,
         # which in most cases just sets the active mode to 0.
         self.con.send_message(
@@ -71,6 +93,12 @@ class OpenRGB:
 
     def set_update_mode(self, mode, device_id=0, speed=None, direction=None,
                         color_mode=None):
+        """
+        This is the protocol level way of setting the mode.
+
+        mode can either be the mode id, or the ORGBMode object, though in the
+        second case it's preferable to use it directly to set the active mode.
+        """
         data = None
         # this requires getting the device info
         if type(mode) is ORGBMode:
@@ -90,6 +118,9 @@ class OpenRGB:
 
     # LED Control
     def update_leds(self, color_collection, device_id=0):
+        """
+        This is the protocol level function for setting multiple LEDs at once.
+        """
         c_buf = struct.pack('H', len(color_collection))
         for i in color_collection:
             c_buf += pack_color(i)
@@ -101,6 +132,9 @@ class OpenRGB:
         )
 
     def update_zone_leds(self, zone_id, color_collection, device_id=0):
+        """
+        This is the protocol level function for setting a zones LEDs.
+        """
         # Essentially the same as update_leds, but with a zone_id.
         c_buf = struct.pack('IH', zone_id, len(color_collection))
         for i in color_collection:
@@ -113,6 +147,9 @@ class OpenRGB:
         )
 
     def update_single_led(self, led, color, device_id=0):
+        """
+        This is the protocol level function for setting a single LED.
+        """
         msg = struct.pack('i', led) + pack_color(color)
         self.con.send_message(
             ORGBPkt.RGBCONTROLLER_UPDATESINGLELED,
