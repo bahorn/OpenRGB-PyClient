@@ -9,15 +9,28 @@ client = OpenRGB('localhost', 1337)
 
 for device in client.devices():
     print('{} - {}'.format(device.name, device.type))
+    device.set((
+        random.randint(0, 255),
+        random.randint(0, 255),
+        random.randint(0, 255)
+    ))
+
+    possible = {
+        'Static': None,
+        'Pulsate': None,
+        'Rainbow': None,
+        'Rainbow Mood': None,
+        'Rainbow Wave': None
+    }
     for mode in device.modes:
         print('* {} -  {}'.format(mode['value'], mode['name']))
-        if mode['name'] == 'Static':
-            mode.active()
-            device.set((
-                random.randint(0, 255),
-                random.randint(0, 255),
-                random.randint(0, 255)
-            ))
-        if mode['name'] == 'Rainbow':
-            mode.active()
+        if mode.name in possible:
+            possible[mode.name] = mode
+
+    preference = [
+        'Rainbow Wave', 'Rainbow Mood', 'Rainbow', 'Pulsate', 'Static'
+    ]
+    for modetype in preference:
+        if possible[modetype] is not None:
+            possible[modetype].active()
             break
