@@ -3,6 +3,9 @@
 [![PyPI](https://img.shields.io/pypi/v/OpenRGB-PyClient?style=flat-square)](https://pypi.org/project/OpenRGB-PyClient/)
 [![Read the Docs](https://img.shields.io/readthedocs/openrgb-pyclient?style=flat-square)](https://openrgb-pyclient.readthedocs.io/en/latest/)
 
+
+**You are currently better off using [jath03's Python client!](https://github.com/jath03/openrgb-python) They've been putting a ton of work into it and its generally a easier library to use.**
+
 [OpenRGB](https://gitlab.com/CalcProgrammer1/OpenRGB) 
 dropped it's server protocol into master recently, so
 I wrote this hacky little client library to use it.
@@ -45,4 +48,5 @@ more suitable for your project!
 
 * [NetworkClient.{cpp,h}](https://gitlab.com/CalcProgrammer1/OpenRGB) The C++ client in the OpenRGB repo.
 * [vlakreeh's NodeJS client](https://github.com/vlakreeh/openrgb)
-* [jath03's Python client](https://github.com/jath03/openrgb-python) **Currently better maintained / easier to use of the two Python libraries.**
+* [jath03's Python client](https://github.com/jath03/openrgb-python)
+* [diogotr7's C# Client](https://github.com/diogotr7/OpenRGB.NET)
