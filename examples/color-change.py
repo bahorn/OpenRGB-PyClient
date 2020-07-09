@@ -12,7 +12,7 @@ seq = [
     (91, 206, 250)
 ]
 
-client = OpenRGB('localhost', 1337)
+client = OpenRGB('localhost', 6742)
 
 for device in client.devices():
     for mode in device.modes:

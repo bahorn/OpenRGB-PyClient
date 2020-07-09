@@ -4,7 +4,7 @@ sys.path.append(os.path.realpath('.'))
 
 from openrgb import OpenRGB
 
-client = OpenRGB('localhost', 1337)
+client = OpenRGB('localhost', 6742)
 
 devices = {}
 for i in range(client.controller_count()):

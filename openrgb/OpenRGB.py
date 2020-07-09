@@ -7,7 +7,7 @@ from .Network import Network
 
 
 class OpenRGB:
-    def __init__(self, host, port, client_string='python client'):
+    def __init__(self, host, port=6742, client_string='python client'):
         self.con = Network(host, port)
         self.client_name(client_string)
 
