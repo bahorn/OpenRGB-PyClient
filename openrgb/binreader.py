@@ -14,7 +14,12 @@ class Blob:
         return res
 
     def _pack(self, fmt, data):
-        res = struct.pack(fmt, data)
+
+        if type(data) in (tuple, list):
+            res = struct.pack(fmt, *data)
+        else:
+            res = struct.pack(fmt, data)
+
         self.data += res
         return res
 
