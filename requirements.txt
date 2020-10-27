@@ -8,7 +8,7 @@ cffi==1.14.0
 chardet==3.0.4
 colorama==0.4.3
 contextlib2==0.6.0
-cryptography==2.9.2
+cryptography==3.2
 distlib==0.3.0
 distro==1.4.0
 docutils==0.16
