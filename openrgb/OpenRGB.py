@@ -1,7 +1,7 @@
 import struct
 
 from .ORGBDevice import ORGBDevice, ORGBMode
-from .consts import ORGBPkt
+from .consts import ORGBPkt, ORGBProtoVersion
 from .utils import pack_color, prepend_length
 from .Network import Network
 
@@ -156,3 +156,13 @@ class OpenRGB:
             data=msg,
             device_id=device_id
         )
+
+    def get_version(self):
+        """
+        Gets the protocol version.
+        """
+        self.con.send_message(
+            ORGBPkt.REQUEST_PROTOCOL_VERSION
+        )
+        msg = self.con.recv_message()
+        return ORGBProtoVersion(struct.unpack('I', msg[1])[0])
