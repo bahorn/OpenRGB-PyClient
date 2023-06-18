@@ -50,14 +50,14 @@ class Blob:
             total_len = len(value)+1
             self.ushort(total_len)
             packed = self._pack(
-                '{}s'.format(total_len), bytes(value, 'ascii')+b'\x00'
+                '{}s'.format(total_len), bytes(value, 'utf-8')+b'\x00'
             )
             return packed
         else:
             total_len = self.ushort()
             unpacked = self._unpack(
                 '{}s'.format(total_len)
-            )[0].decode('ascii')
+            )[0].decode('utf-8')
             if unpacked[-1] == '\x00':
                 return unpacked[:-1]
             return unpacked

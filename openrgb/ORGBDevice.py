@@ -63,8 +63,8 @@ class ORGBMode(object):
             return
         # We belong to an ORGBDevice, which belongs to the main OpenRGB class.
         device = self.owner
-        con = device.owner
-        con.set_update_mode(self, device_id=device.id)
+        client = device.owner
+        client.set_update_mode(self, device_id=device.id)
 
     # serialize this for the wire.
     def __bytes__(self):
@@ -113,7 +113,7 @@ class ORGBZone(object):
 
     def set(self, colors, interpolate=False):
         """
-        This will set the LEDs belong to this zone to the color(s) in
+        This will set the LEDs belonging to this zone to the color(s) in
         `colors`.
 
         If provided with a single tuple, it will set all LEDs in the zone to
@@ -131,10 +131,10 @@ class ORGBZone(object):
         Interpolate has no effect if not given a list.
         """
         device = self.owner
-        con = device.owner
+        client = device.owner
         n_leds = self.leds_count
         _set_batch(
-            lambda c, did: con.update_zone_leds(self.id, c, did),
+            lambda c, did: client.update_zone_leds(self.id, c, did),
             device,
             n_leds,
             colors,
@@ -147,11 +147,11 @@ class ORGBZone(object):
 
 class ORGBLED(object):
     """
-    ORGBLED is a class that contains a reference to a Single LED.
-    This is constructed by ORGBDevice and shouldn't ever need to be created
+    `ORGBLED` is a class that contains a reference to a single LED.
+    This is constructed by `ORGBDevice` and shouldn't ever need to be created
     manually.
 
-    It does however provide the LED Name, current value, and a reference to the
+    It does however provide the LED name, current value, and a reference to the
     device that owns it.
 
 
@@ -172,9 +172,9 @@ class ORGBLED(object):
         as a tuple of RGB values.
         """
         device = self.owner
-        con = device.owner
+        client = device.owner
         self.value = color
-        con.update_single_led(self.id, color, device_id=device.id)
+        client.update_single_led(self.id, color, device_id=device.id)
 
     def __getitem__(self, item):
         return self.__dict__[item]
@@ -182,7 +182,7 @@ class ORGBLED(object):
 
 class ORGBDevice:
     """
-    ORGB is used to read device responses from the OpenRGB SDK server
+    `ORGBDevice` is used to read device responses from the OpenRGB SDK server.
 
     :attribute id: Device ID.
     :attribute type: Device Type.
@@ -196,7 +196,6 @@ class ORGBDevice:
     :attribute zones: List of zones
     :attribute leds: List of LEDs
     :attribute colors: List of colors
-
     """
 
     def __init__(self, data, device_id=0, owner=None):
@@ -300,7 +299,7 @@ class ORGBDevice:
 
     def set(self, colors, interpolate=False):
         """
-        This will set the LEDs belong to this device to the color(s) in
+        This will set the LEDs belonging to this device to the color(s) in
         `colors`.
 
         If provided with a single tuple, it will set all LEDs in the device to
@@ -316,11 +315,10 @@ class ORGBDevice:
         range of values in `colors`
 
         Interpolate has no effect if not given a list.
-
         """
-        con = self.owner
+        client = self.owner
         n_leds = len(self.leds)
-        _set_batch(con.update_leds, self, n_leds, colors, interpolate)
+        _set_batch(client.update_leds, self, n_leds, colors, interpolate)
 
     def __repr__(self):
         return '{} - {}'.format(self.name, self.type)

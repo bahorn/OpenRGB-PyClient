@@ -5,4 +5,7 @@ from openrgb import OpenRGB
 
 client = OpenRGB('localhost', 6742)
 
-print(client.get_version())
+profiles = client.profiles()
+print(profiles)
+
+client.load_profile(profiles[0])

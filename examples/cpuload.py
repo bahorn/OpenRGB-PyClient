@@ -1,18 +1,16 @@
 import time
 import psutil
-import sys,os
 
+import sys, os
 sys.path.append(os.path.realpath('.'))
+
 from openrgb import OpenRGB
 
-
 client = OpenRGB('localhost', 6742)
-
 
 # find and clear
 for device in client.devices():
     device.set((0, 0, 0))
-
 
 while True:
     load = psutil.cpu_percent()

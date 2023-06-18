@@ -1,9 +1,7 @@
-import time
-import sys,os
-
+import sys, os
 sys.path.append(os.path.realpath('.'))
-from openrgb import OpenRGB
 
+from openrgb import OpenRGB
 
 seq = [
     (214, 2, 112),
