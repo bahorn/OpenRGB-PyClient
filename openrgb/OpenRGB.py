@@ -156,6 +156,55 @@ class OpenRGB:
             data=msg,
             device_id=device_id
         )
+    
+    # Profile Control
+    
+    def profiles(self):
+        """
+        This returns a list of profiles.
+        """
+        self.con.send_message(ORGBPkt.REQUEST_PROFILE_LIST)
+        msg = self.con.recv_message()
+        _, data = msg
+        length, profiles_count = struct.unpack('IH', data[:6])
+        profiles = []
+        pos = 6
+        for i in range(profiles_count):
+            str_length, = struct.unpack('H', data[pos:pos+2])
+            profile_name = data[pos+2:pos+2+str_length].decode().strip('\x00')
+            profiles.append(profile_name)
+            pos += 2+str_length
+        
+        return profiles
+    
+    def load_profile(self, profile_name):
+        """
+        This loads a profile given the name.
+        
+        Note that loading fails when the OpenRGB GUI is open and a different profile is selected in the dropdown.
+        """
+        self.con.send_message(
+            ORGBPkt.REQUEST_LOAD_PROFILE,
+            data=bytes(profile_name, 'utf-8')
+        )
+    
+    def save_profile(self, profile_name):
+        """
+        This saves a profile given the name.
+        """
+        self.con.send_message(
+            ORGBPkt.REQUEST_SAVE_PROFILE,
+            data=bytes(profile_name, 'utf-8')
+        )
+    
+    def delete_profile(self, profile_name):
+        """
+        This deletes a profile given the name.
+        """
+        self.con.send_message(
+            ORGBPkt.REQUEST_DELETE_PROFILE,
+            data=bytes(profile_name, 'utf-8')
+        )
 
     def get_version(self):
         """
