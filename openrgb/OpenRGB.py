@@ -50,7 +50,7 @@ class OpenRGB:
     # Generator for getting devices
     def devices(self):
         """
-        This provides a generator for iterating though all the devices OpenRGB
+        This provides a generator for iterating through all the devices OpenRGB
         can find.
 
         This is the recommended interface for finding devices.
@@ -81,11 +81,9 @@ class OpenRGB:
 
     def set_custom_mode(self, device_id=0):
         """
-        This calls set_custom_mode in the RGBController, which in most cases
+        This calls `RGBController::SetCustomMode`, which in most cases
         sets the active mode to 0.
         """
-        # this just calls the function SetCustomMode() in the RGB controller,
-        # which in most cases just sets the active mode to 0.
         self.con.send_message(
             ORGBPkt.RGBCONTROLLER_SETCUSTOMMODE,
             device_id=device_id
@@ -96,7 +94,7 @@ class OpenRGB:
         """
         This is the protocol level way of setting the mode.
 
-        mode can either be the mode id, or the ORGBMode object, though in the
+        `mode` can either be the mode id, or an `ORGBMode` object, though in the
         second case it's preferable to use it directly to set the active mode.
         """
         data = None
@@ -117,6 +115,7 @@ class OpenRGB:
         )
 
     # LED Control
+    
     def update_leds(self, color_collection, device_id=0):
         """
         This is the protocol level function for setting multiple LEDs at once.
@@ -134,8 +133,9 @@ class OpenRGB:
     def update_zone_leds(self, zone_id, color_collection, device_id=0):
         """
         This is the protocol level function for setting a zones LEDs.
+        
+        Essentially the same as update_leds, but with a zone_id.
         """
-        # Essentially the same as update_leds, but with a zone_id.
         c_buf = struct.pack('IH', zone_id, len(color_collection))
         for i in color_collection:
             c_buf += pack_color(i)
@@ -208,7 +208,7 @@ class OpenRGB:
 
     def get_version(self):
         """
-        Gets the protocol version.
+        This returns the protocol version.
         """
         self.con.send_message(
             ORGBPkt.REQUEST_PROTOCOL_VERSION

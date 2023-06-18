@@ -113,7 +113,7 @@ class ORGBZone(object):
 
     def set(self, colors, interpolate=False):
         """
-        This will set the LEDs belong to this zone to the color(s) in
+        This will set the LEDs belonging to this zone to the color(s) in
         `colors`.
 
         If provided with a single tuple, it will set all LEDs in the zone to
@@ -147,11 +147,11 @@ class ORGBZone(object):
 
 class ORGBLED(object):
     """
-    ORGBLED is a class that contains a reference to a Single LED.
-    This is constructed by ORGBDevice and shouldn't ever need to be created
+    `ORGBLED` is a class that contains a reference to a single LED.
+    This is constructed by `ORGBDevice` and shouldn't ever need to be created
     manually.
 
-    It does however provide the LED Name, current value, and a reference to the
+    It does however provide the LED name, current value, and a reference to the
     device that owns it.
 
 
@@ -182,7 +182,7 @@ class ORGBLED(object):
 
 class ORGBDevice:
     """
-    ORGB is used to read device responses from the OpenRGB SDK server
+    `ORGBDevice` is used to read device responses from the OpenRGB SDK server.
 
     :attribute id: Device ID.
     :attribute type: Device Type.
@@ -196,7 +196,6 @@ class ORGBDevice:
     :attribute zones: List of zones
     :attribute leds: List of LEDs
     :attribute colors: List of colors
-
     """
 
     def __init__(self, data, device_id=0, owner=None):
@@ -300,7 +299,7 @@ class ORGBDevice:
 
     def set(self, colors, interpolate=False):
         """
-        This will set the LEDs belong to this device to the color(s) in
+        This will set the LEDs belonging to this device to the color(s) in
         `colors`.
 
         If provided with a single tuple, it will set all LEDs in the device to
@@ -316,7 +315,6 @@ class ORGBDevice:
         range of values in `colors`
 
         Interpolate has no effect if not given a list.
-
         """
         client = self.owner
         n_leds = len(self.leds)
