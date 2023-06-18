@@ -63,8 +63,8 @@ class ORGBMode(object):
             return
         # We belong to an ORGBDevice, which belongs to the main OpenRGB class.
         device = self.owner
-        con = device.owner
-        con.set_update_mode(self, device_id=device.id)
+        client = device.owner
+        client.set_update_mode(self, device_id=device.id)
 
     # serialize this for the wire.
     def __bytes__(self):
@@ -131,10 +131,10 @@ class ORGBZone(object):
         Interpolate has no effect if not given a list.
         """
         device = self.owner
-        con = device.owner
+        client = device.owner
         n_leds = self.leds_count
         _set_batch(
-            lambda c, did: con.update_zone_leds(self.id, c, did),
+            lambda c, did: client.update_zone_leds(self.id, c, did),
             device,
             n_leds,
             colors,
@@ -172,9 +172,9 @@ class ORGBLED(object):
         as a tuple of RGB values.
         """
         device = self.owner
-        con = device.owner
+        client = device.owner
         self.value = color
-        con.update_single_led(self.id, color, device_id=device.id)
+        client.update_single_led(self.id, color, device_id=device.id)
 
     def __getitem__(self, item):
         return self.__dict__[item]
@@ -318,9 +318,9 @@ class ORGBDevice:
         Interpolate has no effect if not given a list.
 
         """
-        con = self.owner
+        client = self.owner
         n_leds = len(self.leds)
-        _set_batch(con.update_leds, self, n_leds, colors, interpolate)
+        _set_batch(client.update_leds, self, n_leds, colors, interpolate)
 
     def __repr__(self):
         return '{} - {}'.format(self.name, self.type)
