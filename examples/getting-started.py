@@ -1,16 +1,13 @@
-# Adding the library to our PYTHONPATH
-import sys,os
+import sys, os
 sys.path.append(os.path.realpath('.'))
 
 from openrgb import OpenRGB
 
 client = OpenRGB('localhost', 6742)
 
-devices = {}
-for i in range(client.controller_count()):
-    devices[i] = client.controller_data(device_id=i)
+devices = list(client.devices())
 
 print(devices)
 
-for _, device in devices.items():
+for device in devices:
     print('{} has {} LED(s)'.format(device.name, len(device.leds)))

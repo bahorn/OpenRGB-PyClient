@@ -1,9 +1,9 @@
 import time
-import sys
-import os
 import random
 
+import sys, os
 sys.path.append(os.path.realpath('.'))
+
 from openrgb import OpenRGB
 
 client = OpenRGB('localhost', 6742)
@@ -15,6 +15,7 @@ for device in client.devices():
         for mode in device.modes:
             if mode.name == "Direct":
                 mode.active()
+                break
         device.set((0, 0, 0))
         devices.append(device)
 
