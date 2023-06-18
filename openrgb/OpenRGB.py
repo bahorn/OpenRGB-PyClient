@@ -1,5 +1,6 @@
 import struct
 
+from .binreader import Blob
 from .ORGBDevice import ORGBDevice, ORGBMode
 from .consts import ORGBPkt, ORGBProtoVersion
 from .utils import pack_color, prepend_length
@@ -166,14 +167,14 @@ class OpenRGB:
         self.con.send_message(ORGBPkt.REQUEST_PROFILE_LIST)
         msg = self.con.recv_message()
         _, data = msg
-        length, profiles_count = struct.unpack('IH', data[:6])
-        profiles = []
-        pos = 6
-        for i in range(profiles_count):
-            str_length, = struct.unpack('H', data[pos:pos+2])
-            profile_name = data[pos+2:pos+2+str_length].decode().strip('\x00')
-            profiles.append(profile_name)
-            pos += 2+str_length
+        
+        blob = Blob(data)
+        length = blob.uint()
+        if length != len(data):
+            raise Exception('Length incorrect?')
+        
+        profiles_count = blob.ushort()
+        profiles = [blob.string() for _ in range(profiles_count)]
         
         return profiles
     
