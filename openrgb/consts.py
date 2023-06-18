@@ -47,6 +47,6 @@ class ORGBProtoVersion(Enum):
     V2 = 2
     V3 = 3
 
-MagicBytes = bytes('ORGB', 'ascii')
+MagicBytes = bytes('ORGB', 'utf-8')
 HeaderFmt = '4sIII'
 HeaderSize = struct.calcsize(HeaderFmt)

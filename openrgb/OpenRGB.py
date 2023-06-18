@@ -22,7 +22,7 @@ class OpenRGB:
             self.client_string = name
         self.con.send_message(
             ORGBPkt.SET_CLIENT_NAME,
-            bytes(self.client_string, 'ascii')
+            bytes(self.client_string, 'utf-8')
         )
 
     def controller_count(self):
